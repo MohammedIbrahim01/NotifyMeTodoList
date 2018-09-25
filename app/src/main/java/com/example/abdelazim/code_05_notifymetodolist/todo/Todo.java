@@ -1,14 +1,21 @@
 package com.example.abdelazim.code_05_notifymetodolist.todo;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.Date;
 
+@Entity(tableName = "todoTable")
 public class Todo {
 
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
     private int priority;
     private Date date;
 
+    @Ignore
     public Todo(String title, int priority, Date date) {
         this.title = title;
         this.priority = priority;

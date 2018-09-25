@@ -18,6 +18,8 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
+import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
+import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +33,7 @@ public class TodoActivity extends AppCompatActivity {
 
     private RecyclerView todoRecyclerView;
     private List<Todo> todoList;
+    private TodoAdapter todoAdapter;
 
     private FloatingActionButton addFab;
     private CoordinatorLayout rootLayout;
@@ -51,8 +54,13 @@ public class TodoActivity extends AppCompatActivity {
         todoList.add(new Todo("drink water2", 2, new Date()));
         todoList.add(new Todo("drink water3", 1, new Date()));
 
-        TodoAdapter todoAdapter = new TodoAdapter();
-        todoAdapter.setTodoList(todoList);
+        todoAdapter = new TodoAdapter(this);
+        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                todoAdapter.setTodoList(AppDatabase.getInstance(TodoActivity.this).todoDao().getAllTodo());
+            }
+        });
 
         todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         todoRecyclerView.setAdapter(todoAdapter);
@@ -92,11 +100,16 @@ public class TodoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                int priority = getPriority();
-                String name = nameEditText.getText().toString();
-                Date date = new Date();
+                final int priority = getPriority();
+                final String name = nameEditText.getText().toString();
+                final Date date = new Date();
                 popupWindow.dismiss();
-                Log.i("WWW", "name: " + name + " priority: " + priority + "date: " + date.toString());
+                AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppDatabase.getInstance(TodoActivity.this).todoDao().insertTodo(new Todo(name, priority, date));
+                    }
+                });
             }
         });
 
