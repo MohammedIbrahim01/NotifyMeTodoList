@@ -5,16 +5,17 @@ import java.util.Date;
 public class Todo {
 
     private int id;
-    private String title, priority;
+    private String title;
+    private int priority;
     private Date date;
 
-    public Todo(String title, String priority, Date date) {
+    public Todo(String title, int priority, Date date) {
         this.title = title;
         this.priority = priority;
         this.date = date;
     }
 
-    public Todo(int id, String title, String priority, Date date) {
+    public Todo(int id, String title, int priority, Date date) {
         this.id = id;
         this.title = title;
         this.priority = priority;
@@ -37,11 +38,11 @@ public class Todo {
         this.title = title;
     }
 
-    public String getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 

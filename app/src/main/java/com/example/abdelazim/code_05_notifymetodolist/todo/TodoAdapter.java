@@ -30,7 +30,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull TodoAdapter.ViewHolder holder, int position) {
         holder.titleTextView.setText(todoList.get(position).getTitle());
         holder.dateTextView.setText(todoList.get(position).getDate().toString());
-        holder.priorityTextView.setText(todoList.get(position).getPriority());
+        holder.priorityTextView.setText(String.valueOf(todoList.get(position).getPriority()));
     }
 
     @Override
