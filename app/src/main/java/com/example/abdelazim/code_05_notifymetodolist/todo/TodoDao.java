@@ -1,5 +1,6 @@
 package com.example.abdelazim.code_05_notifymetodolist.todo;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -12,7 +13,10 @@ import java.util.List;
 public interface TodoDao {
 
     @Query("SELECT * FROM todoTable ORDER BY priority")
-    List<Todo> getAllTodo();
+    LiveData<List<Todo>> getAllTodo();
+
+    @Query("SELECT * FROM todoTable WHERE id = :id")
+    LiveData<Todo> getTodoById(int id);
 
     @Insert
     void insertTodo(Todo todo);
