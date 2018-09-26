@@ -1,4 +1,4 @@
-package com.example.abdelazim.code_05_notifymetodolist.todo.edit_todo;
+package com.example.abdelazim.code_05_notifymetodolist.todo.add_edit_todo;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -6,12 +6,12 @@ import android.support.annotation.NonNull;
 
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
 
-public class TodoDetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class AddEditTodoViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final AppDatabase database;
     private final int todoId;
 
-    public TodoDetailsViewModelFactory(AppDatabase database, int todoId) {
+    public AddEditTodoViewModelFactory(AppDatabase database, int todoId) {
         this.database = database;
         this.todoId = todoId;
     }
@@ -19,6 +19,6 @@ public class TodoDetailsViewModelFactory extends ViewModelProvider.NewInstanceFa
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new TodoDetailsViewModel(database, todoId);
+        return (T) new AddEditTodoViewModel(database, todoId);
     }
 }

@@ -8,7 +8,7 @@
     android:background="#ebf1f0"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".todo.edit_todo.TodoDetailsActivity">
+    tools:context=".todo.add_edit_todo.AddEditTodoActivity">
 
 
     <EditText
@@ -66,13 +66,13 @@
 
     <!-- Add button -->
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/add_save_button"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
-        android:text="add"
-        android:textColor="@android:color/primary_text_dark" />
+        android:textColor="@android:color/primary_text_dark"
+        tools:text="add/edit" />
 </LinearLayout>

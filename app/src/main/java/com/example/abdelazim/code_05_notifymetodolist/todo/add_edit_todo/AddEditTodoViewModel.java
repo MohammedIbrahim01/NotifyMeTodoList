@@ -1,4 +1,4 @@
-package com.example.abdelazim.code_05_notifymetodolist.todo.edit_todo;
+package com.example.abdelazim.code_05_notifymetodolist.todo.add_edit_todo;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
@@ -6,11 +6,11 @@ import android.arch.lifecycle.ViewModel;
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 
-public class TodoDetailsViewModel extends ViewModel {
+class AddEditTodoViewModel extends ViewModel {
 
-    LiveData<Todo> todo;
+    private LiveData<Todo> todo;
 
-    public TodoDetailsViewModel(AppDatabase database, int todoId) {
+    public AddEditTodoViewModel(AppDatabase database, int todoId) {
 
         todo = database.todoDao().getTodoById(todoId);
     }

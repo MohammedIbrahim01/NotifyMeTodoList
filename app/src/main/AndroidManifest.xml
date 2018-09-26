@@ -22,7 +22,7 @@
         <activity
             android:name=".done.DoneActivity"
             android:label="Done" />
-        <activity android:name=".todo.edit_todo.TodoDetailsActivity" />
+        <activity android:name=".todo.add_edit_todo.AddEditTodoActivity"></activity>
     </application>
 
 </manifest>
