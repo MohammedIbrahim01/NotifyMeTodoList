@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_edit_todo_linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ebf1f0"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".todo.edit_todo.TodoDetailsActivity">
+
+
+    <EditText
+        android:id="@+id/title_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Todo" />
+
+    <TextView
+        android:id="@+id/todo_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        tools:text="Priority" />
+
+    <!-- RadioGroup for visible selection of a priority -->
+    <RadioGroup
+        android:id="@+id/priority_radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <RadioButton
+            android:id="@+id/high_rad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/materialRed"
+            android:checked="true"
+            android:text="High"
+            android:theme="@style/WhiteRadioButton" />
+
+        <RadioButton
+            android:id="@+id/medium_rad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/materialOrange"
+            android:text="Medium"
+            android:theme="@style/WhiteRadioButton" />
+
+        <RadioButton
+            android:id="@+id/low_rad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/materialYellow"
+            android:text="Low"
+            android:theme="@style/WhiteRadioButton" />
+
+    </RadioGroup>
+
+    <!-- Add button -->
+    <Button
+        android:id="@+id/add_button"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:text="add"
+        android:textColor="@android:color/primary_text_dark" />
+</LinearLayout>

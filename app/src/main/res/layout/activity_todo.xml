@@ -5,7 +5,7 @@
     android:id="@+id/root_coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".todo.TodoActivity">
+    tools:context=".todo.display_todos.TodoActivity">
 
     <include layout="@layout/content_todo" />
 

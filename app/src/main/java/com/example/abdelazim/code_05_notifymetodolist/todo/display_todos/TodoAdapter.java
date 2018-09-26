@@ -1,4 +1,4 @@
-package com.example.abdelazim.code_05_notifymetodolist.todo;
+package com.example.abdelazim.code_05_notifymetodolist.todo.display_todos;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
+import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

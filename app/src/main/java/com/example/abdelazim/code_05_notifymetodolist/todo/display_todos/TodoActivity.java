@@ -1,6 +1,9 @@
-package com.example.abdelazim.code_05_notifymetodolist.todo;
+package com.example.abdelazim.code_05_notifymetodolist.todo.display_todos;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +24,8 @@ import android.widget.RadioGroup;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
+import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
+import com.example.abdelazim.code_05_notifymetodolist.todo.edit_todo.TodoDetailsActivity;
 import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
 
 import java.util.Date;
@@ -31,6 +37,7 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
     public static final int PRIORITY_HIGH = 1;
     public static final int PRIORITY_MEDIUM = 2;
     public static final int PRIORITY_LOW = 3;
+    public static final String KEY_TODO_ID = "key-todo-id";
 
     // root layout views
     private RecyclerView todoRecyclerView;
@@ -54,11 +61,52 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
 
         todoAdapter = new TodoAdapter(this, this);
 
+        setupRecyclerView();
+
+        setupViewModel();
+    }
+
+    /**
+     * set LayoutManager and adapter
+     * <p>
+     * and attach ItemTouchHelper to enable swipe to delete
+     */
+    private void setupRecyclerView() {
+
         todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         todoRecyclerView.setAdapter(todoAdapter);
         todoRecyclerView.setHasFixedSize(true);
 
-        setupViewModel();
+        //enable swipe to delete
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
+
+                //delete the todoo from database
+                AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppDatabase.getInstance(getApplicationContext()).todoDao().deleteTodo(todoAdapter.getTodoList().get(viewHolder.getAdapterPosition()));
+                    }
+                });
+            }
+        }).attachToRecyclerView(todoRecyclerView);
+    }
+
+
+    @Override
+    public void onListItemClickListener(int index) {
+
+        Intent intent = new Intent(TodoActivity.this, TodoDetailsActivity.class);
+        intent.putExtra(KEY_TODO_ID, todoAdapter.getTodoList().get(index).getId());
+        startActivity(intent);
+
+        Log.i("WWW", "Title:" + todoAdapter.getTodoList().get(index).getTitle());
     }
 
 
@@ -69,7 +117,7 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
      */
     private void setupViewModel() {
 
-        TodoViewModel viewModel = new TodoViewModel(getApplication());
+        TodoViewModel viewModel = ViewModelProviders.of(TodoActivity.this).get(TodoViewModel.class);
         viewModel.getTodoList().observe(TodoActivity.this, new Observer<List<Todo>>() {
             @Override
             public void onChanged(@Nullable List<Todo> todos) {
@@ -166,11 +214,5 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
                 return 0;
         }
 
-    }
-
-    @Override
-    public void onListItemClickListener(int index) {
-
-        Log.i("WWW", "Title:" + todoAdapter.getTodoList().get(index).getTitle());
     }
 }
