@@ -25,7 +25,7 @@ import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
 import java.util.Date;
 import java.util.List;
 
-public class TodoActivity extends AppCompatActivity {
+public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListItemClickListener {
 
     // priority constants
     public static final int PRIORITY_HIGH = 1;
@@ -52,7 +52,7 @@ public class TodoActivity extends AppCompatActivity {
 
         initializeRootViews();
 
-        todoAdapter = new TodoAdapter(this);
+        todoAdapter = new TodoAdapter(this, this);
 
         todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         todoRecyclerView.setAdapter(todoAdapter);
@@ -166,5 +166,11 @@ public class TodoActivity extends AppCompatActivity {
                 return 0;
         }
 
+    }
+
+    @Override
+    public void onListItemClickListener(int index) {
+
+        Log.i("WWW", "Title:" + todoAdapter.getTodoList().get(index).getTitle());
     }
 }

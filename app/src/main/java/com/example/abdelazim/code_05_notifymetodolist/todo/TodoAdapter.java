@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
@@ -16,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
+public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> implements AdapterView.OnItemClickListener {
 
     private String DATE_FORMAT = "dd/MM/yy";
 
@@ -24,12 +25,23 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
     private Context mContext;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
-    public TodoAdapter(Context mContext) {
-        this.mContext = mContext;
+    private final ListItemClickListener mListItemClickListener;
+
+    public interface ListItemClickListener {
+        void onListItemClickListener(int index);
+    }
+
+    public TodoAdapter(Context context, ListItemClickListener listItemClickListener) {
+        mContext = context;
+        mListItemClickListener = listItemClickListener;
     }
 
     public void setTodoList(List<Todo> todoList) {
         this.todoList = todoList;
+    }
+
+    public List<Todo> getTodoList() {
+        return todoList;
     }
 
     @NonNull
@@ -74,7 +86,12 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         return priorityColor;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView titleTextView, dateTextView, priorityTextView;
 
@@ -83,6 +100,13 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
             titleTextView = itemView.findViewById(R.id.todo_item_title_textView);
             dateTextView = itemView.findViewById(R.id.todo_item_date_textView);
             priorityTextView = itemView.findViewById(R.id.todo_item_priority_textView);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mListItemClickListener.onListItemClickListener(getAdapterPosition());
         }
     }
 }
