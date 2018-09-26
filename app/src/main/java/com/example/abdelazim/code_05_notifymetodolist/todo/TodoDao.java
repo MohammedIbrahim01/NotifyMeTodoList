@@ -13,7 +13,12 @@ import java.util.List;
 @Dao
 public interface TodoDao {
 
-    @Query("SELECT * FROM todoTable ORDER BY priority")
+    /**
+     * todos
+     *
+     * @return
+     */
+    @Query("SELECT * FROM todoTable WHERE done = 0 ORDER BY priority")
     LiveData<List<Todo>> getAllTodo();
 
     @Query("SELECT * FROM todoTable WHERE id = :id")
@@ -27,4 +32,13 @@ public interface TodoDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateTodo(Todo todo);
+
+
+    /**
+     * Done
+     *
+     * @return
+     */
+    @Query("SELECT * FROM todoTable WHERE done = 1")
+    LiveData<List<Todo>> getAllDone();
 }

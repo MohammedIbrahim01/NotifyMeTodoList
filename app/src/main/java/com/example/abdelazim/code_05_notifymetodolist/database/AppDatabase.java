@@ -9,7 +9,7 @@ import android.content.Context;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 import com.example.abdelazim.code_05_notifymetodolist.todo.TodoDao;
 
-@Database(entities = Todo.class, version = 1, exportSchema = false)
+@Database(entities = Todo.class, version = 2, exportSchema = false)
 @TypeConverters(AppTypeConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -23,6 +23,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 sInstance = Room.databaseBuilder(context,
                         AppDatabase.class, APP_DATABASE_NAME)
+                        .fallbackToDestructiveMigration()
                         .build();
 
             }

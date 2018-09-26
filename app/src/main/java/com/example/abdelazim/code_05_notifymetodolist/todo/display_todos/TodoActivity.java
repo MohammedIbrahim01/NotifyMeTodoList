@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
+import com.example.abdelazim.code_05_notifymetodolist.done.DoneActivity;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 import com.example.abdelazim.code_05_notifymetodolist.todo.add_edit_todo.AddEditTodoActivity;
 import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
@@ -43,6 +44,8 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
+
+        startActivity(new Intent(TodoActivity.this, DoneActivity.class));
 
         initializeViews();
 
@@ -98,7 +101,10 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
                 AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
                     @Override
                     public void run() {
-                        AppDatabase.getInstance(getApplicationContext()).todoDao().deleteTodo(todoAdapter.getTodoList().get(viewHolder.getAdapterPosition()));
+
+                        Todo todo = todoAdapter.getTodoList().get(viewHolder.getAdapterPosition());
+                        todo.setDone(true);
+                        AppDatabase.getInstance(getApplicationContext()).todoDao().updateTodo(todo);
                     }
                 });
             }
