@@ -5,18 +5,20 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioGroup;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
@@ -33,12 +35,15 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
     private static final String ACTION_ADD = "action-add";
     private static final String ACTION_EDIT = "action-edit";
     public static final String KEY_TODO_ID = "key-todo-id";
-
-    // root layout views
+    // layout views
     private RecyclerView todoRecyclerView;
     private FloatingActionButton addFab;
     private TodoAdapter todoAdapter;
-
+    // DrawerLayout
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    // Toolbar
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +67,48 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
      */
     private void initializeViews() {
 
+        // root view
         addFab = findViewById(R.id.add_fab);
         todoRecyclerView = findViewById(R.id.todo_recyclerView);
+        // DrawerLayout views
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        // Toolbar view
+        toolbar = findViewById(R.id.toolbar);
 
+        // setup ActionBar
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        // handling click on navigation items
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                // mark menu item as checked and close drawers
+                menuItem.setChecked(true);
+                drawerLayout.closeDrawers();
+
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_todo:
+                        // switch to TodoFragment
+                        Log.i("WWW", "click on todo item on NavigationView");
+                        return true;
+                    case R.id.nav_done:
+                        // switch to DoneFragment
+                        return true;
+                    case R.id.nav_settings:
+                        // switch to SettingsFragment
+                        return true;
+                }
+                return false;
+            }
+        });
+
+
+        // handling click on addFab
         addFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +141,7 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
             @Override
             public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
 
-                //delete the todoo from database
+                //make the todoo marked as done
                 AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -146,5 +190,22 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
 
             }
         });
+    }
+
+
+    /**
+     * handling click on menu icon
+     *
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(Gravity.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
