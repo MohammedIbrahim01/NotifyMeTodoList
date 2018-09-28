@@ -17,17 +17,13 @@ import java.util.List;
 public class DoneActivity extends AppCompatActivity implements TodoAdapter.ListItemClickListener {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_done);
 
 
-
-
     }
-
 
 
     @Override
