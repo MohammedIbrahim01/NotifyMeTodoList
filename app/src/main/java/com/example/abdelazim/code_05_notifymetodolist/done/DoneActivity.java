@@ -32,7 +32,7 @@ public class DoneActivity extends AppCompatActivity implements TodoAdapter.ListI
         doneRecyclerView.setHasFixedSize(true);
 
         setupViewModel();
-    }
+git     }
 
     private void setupViewModel() {
 
