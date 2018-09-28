@@ -1,64 +1,40 @@
 package com.example.abdelazim.code_05_notifymetodolist.todo.display_todos;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
-import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
 import com.example.abdelazim.code_05_notifymetodolist.done.DoneActivity;
-import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
-import com.example.abdelazim.code_05_notifymetodolist.todo.add_edit_todo.AddEditTodoActivity;
-import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
+import com.example.abdelazim.code_05_notifymetodolist.done.DoneFragment;
 
-import java.util.List;
+public class TodoActivity extends AppCompatActivity {
 
-public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListItemClickListener {
-
-    // intent actions
-    private static final String ACTION_ADD = "action-add";
-    private static final String ACTION_EDIT = "action-edit";
-    public static final String KEY_TODO_ID = "key-todo-id";
-    // layout views
-    private RecyclerView todoRecyclerView;
-    private FloatingActionButton addFab;
-    private TodoAdapter todoAdapter;
     // DrawerLayout
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     // Toolbar
     private Toolbar toolbar;
+    // FragmentManager
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
 
-        startActivity(new Intent(TodoActivity.this, DoneActivity.class));
+        fragmentManager = getSupportFragmentManager();
 
         initializeViews();
-
-        todoAdapter = new TodoAdapter(this, this);
-
-        setupRecyclerView();
-
-        setupViewModel();
     }
 
 
@@ -67,9 +43,6 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
      */
     private void initializeViews() {
 
-        // root view
-        addFab = findViewById(R.id.add_fab);
-        todoRecyclerView = findViewById(R.id.todo_recyclerView);
         // DrawerLayout views
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
@@ -94,100 +67,21 @@ public class TodoActivity extends AppCompatActivity implements TodoAdapter.ListI
                 switch (menuItem.getItemId()) {
                     case R.id.nav_todo:
                         // switch to TodoFragment
-                        Log.i("WWW", "click on todo item on NavigationView");
+                        fragmentManager.beginTransaction()
+                                .add(R.id.fragment_container, new TodoFragment())
+                                .commit();
                         return true;
                     case R.id.nav_done:
                         // switch to DoneFragment
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.fragment_container, new DoneFragment())
+                                .commit();
                         return true;
                     case R.id.nav_settings:
                         // switch to SettingsFragment
                         return true;
                 }
                 return false;
-            }
-        });
-
-
-        // handling click on addFab
-        addFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(TodoActivity.this, AddEditTodoActivity.class);
-                intent.setAction(ACTION_ADD);
-                startActivity(intent);
-            }
-        });
-    }
-
-
-    /**
-     * set LayoutManager and adapter
-     * and attach ItemTouchHelper to enable swipe to delete
-     */
-    private void setupRecyclerView() {
-
-        todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        todoRecyclerView.setAdapter(todoAdapter);
-        todoRecyclerView.setHasFixedSize(true);
-
-        //enable swipe to delete
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
-
-                //make the todoo marked as done
-                AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Todo todo = todoAdapter.getTodoList().get(viewHolder.getAdapterPosition());
-                        todo.setDone(true);
-                        AppDatabase.getInstance(getApplicationContext()).todoDao().updateTodo(todo);
-                    }
-                });
-            }
-        }).attachToRecyclerView(todoRecyclerView);
-    }
-
-
-    /**
-     * handle click on list item
-     *
-     * @param index
-     */
-    @Override
-    public void onListItemClickListener(int index) {
-
-        Intent intent = new Intent(TodoActivity.this, AddEditTodoActivity.class);
-        intent.setAction(ACTION_EDIT);
-        intent.putExtra(KEY_TODO_ID, todoAdapter.getTodoList().get(index).getId());
-        startActivity(intent);
-
-        Log.i("WWW", "Title:" + todoAdapter.getTodoList().get(index).getTitle());
-    }
-
-
-    /**
-     * setup viewModel with todoAdapter
-     * <p>
-     * so when the data in room changed it updates the adapter via onChanged method
-     */
-    private void setupViewModel() {
-
-        TodoViewModel viewModel = ViewModelProviders.of(TodoActivity.this).get(TodoViewModel.class);
-        viewModel.getTodoList().observe(TodoActivity.this, new Observer<List<Todo>>() {
-            @Override
-            public void onChanged(@Nullable List<Todo> todos) {
-
-                todoAdapter.setTodoList(todos);
-                todoAdapter.notifyDataSetChanged();
-
             }
         });
     }
