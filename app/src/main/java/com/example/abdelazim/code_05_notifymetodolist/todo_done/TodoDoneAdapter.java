@@ -1,4 +1,4 @@
-package com.example.abdelazim.code_05_notifymetodolist.todo.display_todos;
+package com.example.abdelazim.code_05_notifymetodolist.todo_done;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> implements AdapterView.OnItemClickListener {
+public class TodoDoneAdapter extends RecyclerView.Adapter<TodoDoneAdapter.ViewHolder> implements AdapterView.OnItemClickListener {
 
     private String DATE_FORMAT = "dd/MM/yy";
 
@@ -32,7 +32,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
         void onListItemClickListener(int index);
     }
 
-    public TodoAdapter(Context context, ListItemClickListener listItemClickListener) {
+    public TodoDoneAdapter(Context context, ListItemClickListener listItemClickListener) {
         mContext = context;
         mListItemClickListener = listItemClickListener;
     }
@@ -47,13 +47,13 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
 
     @NonNull
     @Override
-    public TodoAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TodoDoneAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TodoAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TodoDoneAdapter.ViewHolder holder, int position) {
         holder.titleTextView.setText(todoList.get(position).getTitle());
         holder.dateTextView.setText(simpleDateFormat.format(todoList.get(position).getDate()));
         holder.priorityTextView.setText(String.valueOf(todoList.get(position).getPriority()));

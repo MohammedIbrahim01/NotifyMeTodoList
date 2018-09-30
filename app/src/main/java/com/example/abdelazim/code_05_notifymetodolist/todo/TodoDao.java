@@ -39,6 +39,6 @@ public interface TodoDao {
      *
      * @return
      */
-    @Query("SELECT * FROM todoTable WHERE done = 1")
+    @Query("SELECT * FROM todoTable WHERE done = 1 ORDER BY priority")
     LiveData<List<Todo>> getAllDone();
 }

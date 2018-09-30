@@ -1,5 +1,6 @@
 package com.example.abdelazim.code_05_notifymetodolist.todo.add_edit_todo;
 
+import android.app.TimePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -9,7 +10,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
@@ -18,7 +22,7 @@ import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
 
 import java.util.Date;
 
-public class AddEditTodoActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddEditTodoActivity extends AppCompatActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
 
     // intent keys and actions
     public static final String KEY_TODO_ID = "key-todo-id";
@@ -36,6 +40,13 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
     private EditText titleEditText;
     private RadioGroup priorityRadioGroup;
     private Button addSaveButton;
+    private LinearLayout notificationInfoLinearLayout;
+    private TextView notificationTimeTextView;
+    private Button setTimeButton;
+
+    private TimePickerDialog timePickerDialog;
+    private int mHour;
+    private int mMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +111,21 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
         titleEditText = findViewById(R.id.title_editText);
         priorityRadioGroup = findViewById(R.id.priority_radioGroup);
         addSaveButton = findViewById(R.id.add_save_button);
+        notificationInfoLinearLayout = findViewById(R.id.notification_info_LinearLayout);
+        notificationTimeTextView = findViewById(R.id.notification_time_textView);
+        setTimeButton = findViewById(R.id.set_time_button);
+
+        Date date = new Date();
+        timePickerDialog = new TimePickerDialog(this, this, date.getHours(), date.getMinutes(), false);
+
+        hideNotificationInfo();
 
         addSaveButton.setOnClickListener(this);
+        setTimeButton.setOnClickListener(this);
+    }
+
+    private void hideNotificationInfo() {
+        notificationInfoLinearLayout.setVisibility(View.GONE);
     }
 
 
@@ -119,36 +143,47 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        if (mAction.equals(ACTION_EDIT)) {
 
-            String title = titleEditText.getText().toString();
-            int priority = getPriority();
-            final Todo editedTodo = new Todo(todoId, title, priority, new Date());
+        switch (v.getId()) {
+            case R.id.set_time_button:
 
-            AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-                @Override
-                public void run() {
+                timePickerDialog.show();
 
-                    AppDatabase.getInstance(getApplicationContext()).todoDao().updateTodo(editedTodo);
+                break;
+
+            case R.id.add_save_button:
+
+                if (mAction.equals(ACTION_EDIT)) {
+
+                    String title = titleEditText.getText().toString();
+                    int priority = getPriority();
+                    final Todo editedTodo = new Todo(todoId, title, priority, new Date());
+
+                    AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            AppDatabase.getInstance(getApplicationContext()).todoDao().updateTodo(editedTodo);
+                        }
+                    });
+                } else if (mAction.equals(ACTION_ADD)) {
+
+                    String title = titleEditText.getText().toString();
+                    int priority = getPriority();
+                    final Todo editedTodo = new Todo(title, priority, new Date());
+
+                    AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            AppDatabase.getInstance(getApplicationContext()).todoDao().insertTodo(editedTodo);
+                        }
+                    });
                 }
-            });
+
+
+                break;
         }
-        else if (mAction.equals(ACTION_ADD)) {
-
-            String title = titleEditText.getText().toString();
-            int priority = getPriority();
-            final Todo editedTodo = new Todo(title, priority, new Date());
-
-            AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-
-                    AppDatabase.getInstance(getApplicationContext()).todoDao().insertTodo(editedTodo);
-                }
-            });
-        }
-
-        finish();
     }
 
 
@@ -174,5 +209,22 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
             default:
                 return 0;
         }
+    }
+
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+        mHour = hourOfDay;
+        mMinute = minute;
+        showNotificationInfo(hourOfDay, minute);
+    }
+
+    private void showNotificationInfo(int hourOfDay, int minute) {
+
+        String time = "";
+        time = hourOfDay + " : " + minute;
+        notificationTimeTextView.setText(time);
+        notificationInfoLinearLayout.setVisibility(View.VISIBLE);
     }
 }

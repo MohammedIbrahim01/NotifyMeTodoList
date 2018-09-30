@@ -15,16 +15,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 import com.example.abdelazim.code_05_notifymetodolist.todo.add_edit_todo.AddEditTodoActivity;
+import com.example.abdelazim.code_05_notifymetodolist.todo_done.TodoDoneAdapter;
 import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
 
 import java.util.List;
 
-public class TodoFragment extends Fragment implements TodoAdapter.ListItemClickListener {
+public class TodoFragment extends Fragment implements TodoDoneAdapter.ListItemClickListener {
 
     // intent actions
     private static final String ACTION_ADD = "action-add";
@@ -33,7 +35,8 @@ public class TodoFragment extends Fragment implements TodoAdapter.ListItemClickL
     // layout views
     private RecyclerView todoRecyclerView;
     private FloatingActionButton addFab;
-    private TodoAdapter todoAdapter;
+    private TextView todoIsEmptyTextView;
+    private TodoDoneAdapter todoAdapter;
 
     //Mandatory constructor to instantiate the Fragment
     public TodoFragment() {
@@ -45,11 +48,13 @@ public class TodoFragment extends Fragment implements TodoAdapter.ListItemClickL
 
         View view = inflater.inflate(R.layout.todo_layout, container, false);
 
-        todoAdapter = new TodoAdapter(getContext(), this);
+        todoAdapter = new TodoDoneAdapter(getContext(), this);
 
         initViews(view);
 
         setupRecyclerView();
+
+        setupViewModel();
 
         return view;
     }
@@ -65,6 +70,7 @@ public class TodoFragment extends Fragment implements TodoAdapter.ListItemClickL
         //get reference to views
         addFab = view.findViewById(R.id.add_fab);
         todoRecyclerView = view.findViewById(R.id.todo_recyclerView);
+        todoIsEmptyTextView = view.findViewById(R.id.todo_is_empty_textView);
 
         // handling click on addFab
         addFab.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +83,6 @@ public class TodoFragment extends Fragment implements TodoAdapter.ListItemClickL
             }
         });
     }
-
 
 
     /**
@@ -106,7 +111,7 @@ public class TodoFragment extends Fragment implements TodoAdapter.ListItemClickL
                     public void run() {
 
                         Todo todo = todoAdapter.getTodoList().get(viewHolder.getAdapterPosition());
-                        todo.setDone(true);
+                        todo.setDone(1);
                         AppDatabase.getInstance(getContext()).todoDao().updateTodo(todo);
                     }
                 });
@@ -130,8 +135,23 @@ public class TodoFragment extends Fragment implements TodoAdapter.ListItemClickL
                 todoAdapter.setTodoList(todos);
                 todoAdapter.notifyDataSetChanged();
 
+                if (todoAdapter.getItemCount() == 0)
+                    displayTodoIsEmptyMessage();
+                else
+                    displayTodoList();
+
             }
         });
+    }
+
+    private void displayTodoList() {
+        todoIsEmptyTextView.setVisibility(View.INVISIBLE);
+        todoRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void displayTodoIsEmptyMessage() {
+        todoRecyclerView.setVisibility(View.INVISIBLE);
+        todoIsEmptyTextView.setVisibility(View.VISIBLE);
     }
 
 

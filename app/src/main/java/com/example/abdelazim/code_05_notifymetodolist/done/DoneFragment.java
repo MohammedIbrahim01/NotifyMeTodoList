@@ -14,14 +14,14 @@ import android.view.ViewGroup;
 
 import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
-import com.example.abdelazim.code_05_notifymetodolist.todo.display_todos.TodoAdapter;
+import com.example.abdelazim.code_05_notifymetodolist.todo_done.TodoDoneAdapter;
 
 import java.util.List;
 
-public class DoneFragment extends Fragment implements TodoAdapter.ListItemClickListener {
+public class DoneFragment extends Fragment implements TodoDoneAdapter.ListItemClickListener {
 
     private RecyclerView doneRecyclerView;
-    private TodoAdapter adapter;
+    private TodoDoneAdapter doneAdapter;
 
 
     // Mandatory constructor to instantiate the fragment
@@ -32,7 +32,7 @@ public class DoneFragment extends Fragment implements TodoAdapter.ListItemClickL
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        adapter = new TodoAdapter(getContext(), this);
+        doneAdapter = new TodoDoneAdapter(getContext(), this);
 
         View view = inflater.inflate(R.layout.done_layout, container, false);
 
@@ -51,7 +51,7 @@ public class DoneFragment extends Fragment implements TodoAdapter.ListItemClickL
      */
     private void setupRecyclerView() {
         doneRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        doneRecyclerView.setAdapter(adapter);
+        doneRecyclerView.setAdapter(doneAdapter);
         doneRecyclerView.setHasFixedSize(true);
     }
 
@@ -66,8 +66,8 @@ public class DoneFragment extends Fragment implements TodoAdapter.ListItemClickL
             @Override
             public void onChanged(@Nullable List<Todo> todos) {
 
-                adapter.setTodoList(todos);
-                adapter.notifyDataSetChanged();
+                doneAdapter.setTodoList(todos);
+                doneAdapter.notifyDataSetChanged();
             }
         });
     }

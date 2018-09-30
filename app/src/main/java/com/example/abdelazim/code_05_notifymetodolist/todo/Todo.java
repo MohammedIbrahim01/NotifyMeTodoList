@@ -14,7 +14,7 @@ public class Todo {
     private String title;
     private int priority;
     private Date date;
-    private boolean done = false;
+    private int done = 0;
 
     @Ignore
     public Todo(String title, int priority, Date date) {
@@ -62,11 +62,11 @@ public class Todo {
         this.date = date;
     }
 
-    public boolean isDone() {
+    public int getDone() {
         return done;
     }
 
-    public void setDone(boolean done) {
+    public void setDone(int done) {
         this.done = done;
     }
 }
