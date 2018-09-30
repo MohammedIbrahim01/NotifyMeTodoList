@@ -23,7 +23,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 sInstance = Room.databaseBuilder(context,
                         AppDatabase.class, APP_DATABASE_NAME)
-                        .fallbackToDestructiveMigration()
                         .build();
 
             }

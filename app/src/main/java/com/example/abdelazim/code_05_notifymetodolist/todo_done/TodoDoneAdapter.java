@@ -15,6 +15,7 @@ import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,8 +58,28 @@ public class TodoDoneAdapter extends RecyclerView.Adapter<TodoDoneAdapter.ViewHo
         holder.titleTextView.setText(todoList.get(position).getTitle());
         holder.dateTextView.setText(simpleDateFormat.format(todoList.get(position).getDate()));
         holder.priorityTextView.setText(String.valueOf(todoList.get(position).getPriority()));
+        holder.notificationTimeTextView.setText(getFormattedTime(todoList.get(position).getNotificationTime()));
         GradientDrawable priorityBackground = (GradientDrawable) holder.priorityTextView.getBackground();
         priorityBackground.setColor(getPriorityColor(todoList.get(position).getPriority()));
+    }
+
+    private String getFormattedTime(Calendar calendar) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        String AM_PM = "am";
+
+        if (hour > 11) {
+            AM_PM = "pm";
+
+            if (hour > 12) {
+                hour -= 12;
+            }
+        }
+
+        String formattedTime = hour + " : " + minute + " " + AM_PM;
+
+        return formattedTime;
+
     }
 
     @Override
@@ -94,13 +115,14 @@ public class TodoDoneAdapter extends RecyclerView.Adapter<TodoDoneAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView titleTextView, dateTextView, priorityTextView;
+        private TextView titleTextView, dateTextView, priorityTextView, notificationTimeTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.todo_item_title_textView);
             dateTextView = itemView.findViewById(R.id.todo_item_date_textView);
             priorityTextView = itemView.findViewById(R.id.todo_item_priority_textView);
+            notificationTimeTextView = itemView.findViewById(R.id.todo_item_notification_time_textView);
 
             itemView.setOnClickListener(this);
         }

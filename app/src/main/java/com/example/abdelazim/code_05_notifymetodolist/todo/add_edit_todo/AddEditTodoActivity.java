@@ -46,8 +46,7 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
     private Button setTimeButton;
 
     private TimePickerDialog timePickerDialog;
-    private int mHour;
-    private int mMinute;
+    private Calendar notificationTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,9 +157,7 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
 
                     String title = titleEditText.getText().toString();
                     int priority = getPriority();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_YEAR), mHour, mMinute);
-                    final Todo editedTodo = new Todo(todoId, title, priority, new Date(), calendar);
+                    final Todo editedTodo = new Todo(todoId, title, priority, new Date(), notificationTime);
 
                     AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
                         @Override
@@ -173,9 +170,7 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
 
                     String title = titleEditText.getText().toString();
                     int priority = getPriority();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_YEAR), mHour, mMinute);
-                    final Todo editedTodo = new Todo(title, priority, new Date(), calendar);
+                    final Todo editedTodo = new Todo(title, priority, new Date(), notificationTime);
 
                     AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
                         @Override
@@ -221,16 +216,35 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-        mHour = hourOfDay;
-        mMinute = minute;
-        showNotificationInfo(hourOfDay, minute);
+        notificationTime = Calendar.getInstance();
+        notificationTime.set(notificationTime.get(Calendar.YEAR), notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_YEAR), hourOfDay, minute);
+        showNotificationInfo();
     }
 
-    private void showNotificationInfo(int hourOfDay, int minute) {
 
-        String time = "";
-        time = hourOfDay + " : " + minute;
-        notificationTimeTextView.setText(time);
+    private void showNotificationInfo() {
+
+        notificationTimeTextView.setText(getFormattedTime(notificationTime));
         notificationInfoLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+
+    private String getFormattedTime(Calendar calendar) {
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        String AM_PM = "am";
+
+        if (hour > 11) {
+            AM_PM = "pm";
+
+            if (hour > 12) {
+                hour -= 12;
+            }
+        }
+
+        String formattedTime = hour + " : " + minute + " " + AM_PM;
+
+        return formattedTime;
+
     }
 }
