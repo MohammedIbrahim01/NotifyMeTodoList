@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity(tableName = "todoTable")
@@ -15,19 +16,22 @@ public class Todo {
     private int priority;
     private Date date;
     private int done = 0;
+    private Calendar notificationTime;
 
     @Ignore
-    public Todo(String title, int priority, Date date) {
+    public Todo(String title, int priority, Date date, Calendar notificationTime) {
         this.title = title;
         this.priority = priority;
         this.date = date;
+        this.notificationTime = notificationTime;
     }
 
-    public Todo(int id, String title, int priority, Date date) {
+    public Todo(int id, String title, int priority, Date date, Calendar notificationTime) {
         this.id = id;
         this.title = title;
         this.priority = priority;
         this.date = date;
+        this.notificationTime = notificationTime;
     }
 
     public int getId() {
@@ -68,5 +72,13 @@ public class Todo {
 
     public void setDone(int done) {
         this.done = done;
+    }
+
+    public Calendar getNotificationTime() {
+        return notificationTime;
+    }
+
+    public void setNotificationTime(Calendar notificationTime) {
+        this.notificationTime = notificationTime;
     }
 }

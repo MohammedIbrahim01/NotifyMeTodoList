@@ -9,7 +9,7 @@ import android.content.Context;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 import com.example.abdelazim.code_05_notifymetodolist.todo.TodoDao;
 
-@Database(entities = Todo.class, version = 3, exportSchema = false)
+@Database(entities = Todo.class, version = 4, exportSchema = false)
 @TypeConverters(AppTypeConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
 

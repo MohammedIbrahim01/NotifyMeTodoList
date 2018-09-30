@@ -20,6 +20,7 @@ import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class AddEditTodoActivity extends AppCompatActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
@@ -157,7 +158,9 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
 
                     String title = titleEditText.getText().toString();
                     int priority = getPriority();
-                    final Todo editedTodo = new Todo(todoId, title, priority, new Date());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_YEAR), mHour, mMinute);
+                    final Todo editedTodo = new Todo(todoId, title, priority, new Date(), calendar);
 
                     AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
                         @Override
@@ -170,7 +173,9 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
 
                     String title = titleEditText.getText().toString();
                     int priority = getPriority();
-                    final Todo editedTodo = new Todo(title, priority, new Date());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_YEAR), mHour, mMinute);
+                    final Todo editedTodo = new Todo(title, priority, new Date(), calendar);
 
                     AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
                         @Override
@@ -181,6 +186,7 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
                     });
                 }
 
+                finish();
 
                 break;
         }
