@@ -22,7 +22,6 @@
         <activity android:name=".todo.add_edit_todo.AddEditTodoActivity"></activity>
 
         <receiver android:name=".utils.NotificationPublisher" />
-        <receiver android:name=".MyReceiver" />
     </application>
 
 </manifest>

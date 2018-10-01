@@ -1,8 +1,5 @@
 package com.example.abdelazim.code_05_notifymetodolist.todo_done;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 
-import com.example.abdelazim.code_05_notifymetodolist.MyReceiver;
 import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.done.DoneFragment;
 import com.example.abdelazim.code_05_notifymetodolist.todo.display_todos.TodoFragment;
@@ -37,10 +33,6 @@ public class TodoDoneActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
 
         initializeViews();
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1000, new Intent(this, MyReceiver.class), PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis()+20000, pendingIntent);
     }
 
 
