@@ -6,19 +6,21 @@ import android.support.annotation.NonNull;
 
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
 
-public class AddEditTodoViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class EditTodoViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
-    private final AppDatabase database;
-    private final int todoId;
+    private AppDatabase database;
+    private int todoId;
 
-    public AddEditTodoViewModelFactory(AppDatabase database, int todoId) {
+
+    public EditTodoViewModelFactory(AppDatabase database, int todoId) {
         this.database = database;
         this.todoId = todoId;
     }
 
+    // Create ViewModel and pass id
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new AddEditTodoViewModel(database, todoId);
+        return (T) new EditTodoViewModel(database, todoId);
     }
 }
