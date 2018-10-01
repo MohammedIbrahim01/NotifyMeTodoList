@@ -19,6 +19,7 @@ import com.example.abdelazim.code_05_notifymetodolist.R;
 import com.example.abdelazim.code_05_notifymetodolist.database.AppDatabase;
 import com.example.abdelazim.code_05_notifymetodolist.todo.Todo;
 import com.example.abdelazim.code_05_notifymetodolist.utils.AppExecutors;
+import com.example.abdelazim.code_05_notifymetodolist.utils.NotificationScheduler;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -64,8 +65,6 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
 
             setupViewModel(todoId);
         }
-
-
         setButtonText();
     }
 
@@ -170,13 +169,14 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
 
                     String title = titleEditText.getText().toString();
                     int priority = getPriority();
-                    final Todo editedTodo = new Todo(title, priority, new Date(), notificationTime);
+                    final Todo newTodo = new Todo(title, priority, new Date(), notificationTime);
+                    NotificationScheduler.schedule(this, newTodo);
 
                     AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
                         @Override
                         public void run() {
 
-                            AppDatabase.getInstance(getApplicationContext()).todoDao().insertTodo(editedTodo);
+                            AppDatabase.getInstance(getApplicationContext()).todoDao().insertTodo(newTodo);
                         }
                     });
                 }
@@ -217,7 +217,10 @@ public class AddEditTodoActivity extends AppCompatActivity implements View.OnCli
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
         notificationTime = Calendar.getInstance();
-        notificationTime.set(notificationTime.get(Calendar.YEAR), notificationTime.get(Calendar.MONTH), notificationTime.get(Calendar.DAY_OF_YEAR), hourOfDay, minute);
+        notificationTime.clear();
+        notificationTime.setTimeInMillis(System.currentTimeMillis());
+        notificationTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        notificationTime.set(Calendar.MINUTE, minute);
         showNotificationInfo();
     }
 
